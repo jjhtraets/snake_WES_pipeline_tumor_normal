@@ -1,0 +1,81 @@
+## run modes (True/False) ##
+run_modes:
+  gatk: True
+  strelka: False
+  QCs: False
+  CNV: True
+
+
+## Additional arguments Snakemake ##
+snakemake: "--rerun-incomplete"
+
+
+## Sample file ##
+# sample_ID: sample names, Tumor_yes: tumor=YES / normal=NO, Patient: patient id
+samples: "test_samples.txt"
+
+
+## Location input/output ##
+input_folder: "/DATA/j.traets/Pipelines/DNAseq_snakemake_pipeline_v2_draft/fastq"
+output_folder: "/DATA/j.traets/Pipelines/DNAseq_snakemake_pipeline_v2_draft/DNAseq_output"
+
+
+## Read name format (before .fastq.gz) ##
+read_name: 
+ R1: "_R1_001"
+ R2: "_R2_001" 
+#  R1: ".1" 
+#  R2: ".2"
+
+
+## Settings tools ##
+params:
+  picard:
+    java_set: "java -XX:ParallelGCThreads=3 -Xmx12g -Djava.io.tmpdir=TMP/" 
+    jar_loc: "-jar /DATA/j.traets/Tools/Picard_2_25_0/picard.jar"
+    groups: "SO=coordinate RGLB=4507257 RGPL=illumina RGPU=NovaSeq6000"
+    threads: 5
+  bwa:
+    ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
+    threads: 10
+  strelka:
+    ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+    threads: 7
+  CNVkit:
+    ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+    access_bed: "CNVkit_resources/access.hg38.bed"
+    bait_bed: "/DATA/j.traets/Reference_files/homo_sapiens/Target_bed_files/Twist_Exome_RefSeq_targets_hg38_nc.bed" # FIX
+    refflat: "/DATA/j.traets/Reference_files/homo_sapiens/Target_bed_files/refFlat_nochr.txt"
+    threads: 10
+  bamqc:
+    target: "/DATA/j.traets/Reference_files/homo_sapiens/Target_bed_files/Twist_Exome_RefSeq_targets_hg38_nc.bed" # FIX!
+    threads: 10
+  gatk:
+    ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+    gnomad: "GATK_references/af-only-gnomad.hg38_nochr.vcf.gz"
+    known_sites: "GATK_references/00-common_all.vcf.gz"
+    threads: 5
+  facets:
+    ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+    common_snps: "GATK_references/00-common_all_sorted.vcf.gz"
+    snppile: "-g -q15 -Q20 -r0,0 -d10000000 -P250" # medium coverage WES >50X
+    targets: "/DATA/j.traets/Reference_files/homo_sapiens/Target_bed_files/Twist_Exome_RefSeq_targets_hg38_nc.bed"
+  manta:
+    ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+
+
+## Sif containers ##
+SIF:
+  fastqc: "sif/fastqc_v0.11.9_cv8.sif" # fastqc
+  multiqc: "sif/multiqc_v1.8_staphb.sif" # multiqc
+  bwa: "sif/bwa_v0.7.17_biocontainers.sif" # bwa
+  samtools: "sif/samtools_v1.9.4deb_biocontainers.sif" # samtools
+  picard: "sif/picard_v2.27.5_broadinstitute.sif" # picard
+  gatk: "sif/gatk_v4.4.0_broadinstitute.sif" # gatk
+  cnvkit: "sif/cnvkit_0.9.10_etal.sif" # CNVkit
+  qualimap: "sif/qualimap_v2.2.1_pegi3s.sif"
+  facets: "sif/facets_v0.6.2_biocontainers.sif"
+  snppile: "sif/snppile_v0.6.2_biocontainers.sif"
+# sif containers can be changed manually
+
+

@@ -1,0 +1,5 @@
+sample_ID;Tumor_yes;Patient
+S2697Nr48;YES;p1
+S2697Nr44;YES;p2
+S2697Nr81;NO;p1
+S2697Nr82;NO;p2
