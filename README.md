@@ -39,7 +39,7 @@ conda activate snakemake_run
 ```
 Example:
 ```bash
-python Run_RNApipeline.py -c 5 -s reverse
+python Run_RNApipeline.py -c 5
 ```
 
 ## Alternative: How to run without the Run_RNApipeline.py shell
