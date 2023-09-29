@@ -33,6 +33,7 @@ def output_rules_all():
     bam_output = expand(config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.bam",sample=set(samples["sample_ID"])),
 
     qc_output = config["output_folder"]+"/multiqc/multiqc_report.html",
+    qc_output_gatk = config["output_folder"]+"/multiqc/multiqc_report_gatk.html",
     qc_output_b = config["output_folder"]+"/multiqc_bam/multiqc_report.html",
 
     variant_GATK_output = expand(config["output_folder"]+"/GATK_out/{tumor}-vs-{normal}-GATKFiltered-pass.vcf",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])    
@@ -47,7 +48,7 @@ def output_rules_all():
 
     NGS_check_files = expand(config["output_folder"]+"/NGScheckmate/{tumor}-vs-{normal}/output_matched.txt",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
 
-    facets = expand(config["output_folder"]+"/FACETS/fitted/{tumor}-vs-{normal}.snppile.csv.gz_fitted.csv",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
+    facets = expand(config["output_folder"] + "/FACETS/fitted/{tumor}-vs-{normal}.snppile.csv.gz_fitted.csv",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
 
     # requires filtering of maf, TODO add r script
     pyclone_input = expand(config["output_folder"] + "/FACETS/{tumor}-vs-{normal}_pyclone_maf_filtered_ready.tsv",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
@@ -58,18 +59,20 @@ def output_rules_all():
 
     manta = expand(config["output_folder"]+"/Manta/{tumor}-vs-{normal}/results/variants/somaticSV.vcf.gz",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
     
-    test = expand(config["output_folder"] + "/FACETS/fitted/{tumor}-vs-{normal}.snppile.csv.gz_fitted.csv",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
+    facets = expand(config["output_folder"] + "/FACETS/fitted/{tumor}-vs-{normal}.snppile.csv.gz_fitted.csv",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
 
     modes = list()
     if config["run_modes"]["gatk"] == True:
-      modes.append(variant_GATK_output)
+      modes.append([variant_GATK_output,maf_files])
     if config["run_modes"]["strelka"] == True:
       modes.append(variant_strelka_output)
     if config["run_modes"]["QCs"] == True:
-      modes.append(qc_output)
-      modes.append([qc_output,qc_output_b])
+        if config["run_modes"]["QCs"] == True and config["run_modes"]["gatk"] == False:
+            modes.append(qc_output)
+        if config["run_modes"]["QCs"] == True and config["run_modes"]["gatk"] == True:
+            modes.append(qc_output_gatk)
     if config["run_modes"]["CNV"] == True:
-      modes.append([cnv_normal,cnv_output,test])
+      modes.append([cnv_normal,cnv_output,facets])
 
     return modes
     

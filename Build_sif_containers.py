@@ -57,4 +57,13 @@ if __name__ == "__main__":
   else:
     print("facets_v0.6.2_biocontainers.sif already present")
 
+  if (os.path.isfile("sif/vep-ensembl_105.sif")) == (not True):
+    os.system("singularity build sif/vep-ensembl_105.sif docker://ensemblorg/ensembl-vep:release_105.0")
+  else:
+    print("vep-ensembl_105.sif already present")
+
+  if (os.path.isfile("sif/mosdepth_v0.3.3_quay.sif")) == (not True):
+    os.system("singularity build sif/mosdepth_v0.3.3_quay.sif docker://quay.io/biocontainers/mosdepth:0.3.3--h37c5b7d_2")
+  else:
+    print("mosdepth_v0.3.3_quay.sif already present")
 

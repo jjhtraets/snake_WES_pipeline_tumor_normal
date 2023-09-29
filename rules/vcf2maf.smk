@@ -1,14 +1,21 @@
-rule vcf2maf:
+rule vcf2maf: # TODO change into singularity
     input:
         calls=config["output_folder"]+"/GATK_out/{tumor}-vs-{normal}-GATKFiltered-pass.vcf",
         fasta=config["params"]["gatk"]["ref"]
     output:
         mafs=config["output_folder"]+"/maf_files/{tumor}-vs-{normal}-GATKFiltered-pass.vep.maf",
-    threads: 4
-    singularity:
-        "docker://vanallenlab/vcf2maf:v1.6.17-5a45760"
+    threads: config["params"]["vcf2maf"]["threads"]
+    params:
+        ref=config["params"]["vcf2maf"]["ref"]
+    #singularity:
+    #    config["SIF"]["vcf2maf"]
+    conda:
+        "../envs/anno.yaml"
     shell:
-        "perl /opt/vcf2maf/vcf2maf.pl --input-vcf {input.calls} --output-maf {output.mafs} --normal-id {wildcards.normal} --tumor-id {wildcards.tumor} --ncbi-build GRCh38 --ref-fasta {input.fasta} --vep-path /opt/vep/.vep  --vep-data /DATA/j.traets/Reference_files/homo_sapiens/GRCh38_VEP_direct/"
+        "perl scripts/vcf2maf.pl --input-vcf {input.calls} --output-maf {output.mafs} --normal-id {wildcards.normal} --tumor-id {wildcards.tumor} --ncbi-build GRCh38 --ref-fasta {input.fasta} --vep-path /opt/vep/ --vep-path $CONDA_PREFIX/bin/ --vep-data {params.ref}"
+        #"""
+        #perl scripts/vcf2maf.pl --input-vcf {input.calls} --output-maf {output.mafs} --normal-id {wildcards.normal} --tumor-id {wildcards.tumor} --ncbi-build GRCh38 --ref-fasta {input.fasta} --vep-path /opt/vep/.vep  --vep-data {params.ref}
+        #"""
 
 rule unzip_indels:
     input:

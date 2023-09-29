@@ -69,22 +69,40 @@ def run_snakemake(yaml_config,config):
     bind_d3 = bind_d3.split("/")
     bind_d3.pop()
     bind_d3 = "/".join(bind_d3)
+
+    CHECK_FOLDER = os.path.isdir(bind_d3)
+    if not CHECK_FOLDER:
+        os.makedirs(bind_d3)
     
     bind_d4 = yaml_config["params"]["CNVkit"]["bait_bed"]
     bind_d4 = bind_d4.split("/")
     bind_d4.pop()
     bind_d4 = "/".join(bind_d4)
+    
+    bind_d5 = yaml_config["params"]["vcf2maf"]["ref"]
+    bind_d5 = bind_d5.split("/")
+    bind_d5.pop()
+    bind_d5 = "/".join(bind_d5)
 
     log.info("bind singularity:")
     log.info(bind_d1)
     log.info(bind_d2)
     log.info(bind_d3)
     log.info(bind_d4)
+    log.info(bind_d5)
     
     logging.shutdown()
+    
+    # save log file and config file to output folder
+    log_config = bind_d3+"/logs/"+file_path[:-4]
+    CHECK_FOLDER = os.path.isdir(log_config)
+    if not CHECK_FOLDER:
+        os.makedirs(log_config)
+    os.system("mv " + file_path + " " + log_config + "/" + file_path)
+    os.system("cp config/config.yaml " + log_config + "/")
 
     # run snakemake
-    os.system('snakemake --use-singularity --singularity-args "-B ' + bind_d1 + ' -B ' + bind_d2  +  ' -B ' +  bind_d3 + ' -B ' + bind_d4 + ' " --cores ' + str(config["cores"]) + ' ' + str(yaml_config["snakemake"]))
+    os.system('snakemake --use-singularity --use-conda --conda-frontend conda --singularity-args "-B ' + bind_d1 + ' -B ' + bind_d2  +  ' -B ' +  bind_d3 + ' -B ' +  bind_d4 + ' -B ' + bind_d5 + ' " --cores ' + str(config["cores"]) + ' ' + str(yaml_config["snakemake"]))
 #--use-conda --conda-frontend conda
 
 if __name__ == "__main__":

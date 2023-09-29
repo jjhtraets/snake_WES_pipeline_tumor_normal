@@ -2,12 +2,12 @@
 run_modes:
   gatk: True
   strelka: False
-  QCs: False
-  CNV: True
+  QCs: True
+  CNV: False
 
 
 ## Additional arguments Snakemake ##
-snakemake: "--rerun-incomplete"
+snakemake: ""
 
 
 ## Sample file ##
@@ -16,8 +16,8 @@ samples: "test_samples.txt"
 
 
 ## Location input/output ##
-input_folder: "/DATA/j.traets/Pipelines/DNAseq_snakemake_pipeline_v2_draft/fastq"
-output_folder: "/DATA/j.traets/Pipelines/DNAseq_snakemake_pipeline_v2_draft/DNAseq_output"
+input_folder: "/DATA/Datasets/PanCancer/NICHE_Pedro/DNA_WES_files/all_fastq_files/final_fastq"
+output_folder: "/DATA/j.traets/Pipelines/DNAseq_snakemake_pipeline_v2_sif/DNAseq_output"
 
 
 ## Read name format (before .fastq.gz) ##
@@ -62,6 +62,9 @@ params:
     targets: "/DATA/j.traets/Reference_files/homo_sapiens/Target_bed_files/Twist_Exome_RefSeq_targets_hg38_nc.bed"
   manta:
     ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+  vcf2maf:
+    ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_VEP_direct/"
+    threads: 4
 
 
 ## Sif containers ##
@@ -76,6 +79,8 @@ SIF:
   qualimap: "sif/qualimap_v2.2.1_pegi3s.sif"
   facets: "sif/facets_v0.6.2_biocontainers.sif"
   snppile: "sif/snppile_v0.6.2_biocontainers.sif"
+  vcf2maf: "sif/vep-ensembl_105.sif"
+  mosdepth: "sif/vep-ensembl_105.sif"
 # sif containers can be changed manually
 
 

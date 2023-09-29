@@ -52,7 +52,7 @@ rule picard_dedup:
         config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG.bam"
     output:
         dup = temp(config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup.bam"),
-        met = temp(config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup.bam_metrix.txt")
+        met = config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup.bam_metrix.txt"
     threads:
         config["params"]["picard"]["threads"]
     singularity:
