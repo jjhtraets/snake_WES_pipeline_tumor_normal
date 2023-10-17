@@ -1,6 +1,6 @@
 # WES pipeline (snakemake), for matched tumor & normal
 version v2.0 (singularity/conda)
-last update, August 2023
+last update, September 2023
 
 Input: paired end  reads, fastq or bam files, WES data
 Output: SNVs/indels (Mutect2 GATK, Strelka), CNVs (CNVkit, FACETS), annotation (VEP, maf), QCs (checkmate, bamqc, fastqc, multiqc)
@@ -60,6 +60,7 @@ Annotation file should contain "sample_ID" (name of the fastq files without [REA
 "input_folder" in the `config/config/yaml` file locates the folder containing the fastq files. And "output_folder" locates the folder for the output files. Setting the modes to True/False determines the output.
 
 ### Updates
+- August/September 2023, bugs and extra QCs
 - February 2023, adding pyclone
 - November 2022, fixed bugs
 - September 2022, added haplotypecaller GATK, Manta SVs
