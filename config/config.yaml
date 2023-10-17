@@ -12,26 +12,26 @@ snakemake: ""
 
 ## Sample file ##
 # sample_ID: sample names, Tumor_yes: tumor=YES / normal=NO, Patient: patient id
-samples: "test_samples.txt"
+samples: "/DATA/Datasets/test/samples_test.txt"
 
 
 ## Location input/output ##
-input_folder: "/DATA/Datasets/PanCancer/NICHE_Pedro/DNA_WES_files/all_fastq_files/final_fastq"
-output_folder: "/DATA/j.traets/Pipelines/DNAseq_snakemake_pipeline_v2_sif/DNAseq_output"
+input_folder: "/DATA/Datasets/test/fastq_files"
+output_folder: "/DATA/Datasets/test/DNAseq_output"
 
 
 ## Read name format (before .fastq.gz) ##
-read_name: 
+read_name:
  R1: "_R1_001"
- R2: "_R2_001" 
-#  R1: ".1" 
+ R2: "_R2_001"
+#  R1: ".1"
 #  R2: ".2"
 
 
 ## Settings tools ##
 params:
   picard:
-    java_set: "java -XX:ParallelGCThreads=3 -Xmx12g -Djava.io.tmpdir=TMP/" 
+    java_set: "java -XX:ParallelGCThreads=3 -Xmx12g -Djava.io.tmpdir=TMP/"
     jar_loc: "-jar /DATA/j.traets/Tools/Picard_2_25_0/picard.jar"
     groups: "SO=coordinate RGLB=4507257 RGPL=illumina RGPU=NovaSeq6000"
     threads: 5
@@ -58,19 +58,22 @@ params:
   facets:
     ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
     common_snps: "GATK_references/00-common_all_sorted.vcf.gz"
-    snppile: "-g -q15 -Q20 -r0,0 -d10000000 -P250" # medium coverage WES >50X
+    snppile: "-g -q15 -Q20 -P100 -r25,0 -d10000" # medium coverage WES >50X
     targets: "/DATA/j.traets/Reference_files/homo_sapiens/Target_bed_files/Twist_Exome_RefSeq_targets_hg38_nc.bed"
   manta:
     ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_ensembl_105_primary_bwa/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
   vcf2maf:
     ref: "/DATA/j.traets/Reference_files/homo_sapiens/GRCh38_VEP_direct/"
     threads: 4
+  ngscheck:
+    SNP: "/DATA/j.traets/Pipelines/DNAseq_snakemake_pipeline_v2_sif/NGS_resources/SNP_GRCh38_hg38_woChr.bed"
+    bam_list: "/DATA/j.traets/Pipelines/DNAseq_snakemake_pipeline_v2_sif/NGS_resources/bam_list.txt" # empty file for NGScheckmate
 
 
 ## Sif containers ##
 SIF:
   fastqc: "sif/fastqc_v0.11.9_cv8.sif" # fastqc
-  multiqc: "sif/multiqc_v1.8_staphb.sif" # multiqc
+  multiqc: "sif/multiqc_v1.13_quay.sif" # multiqc
   bwa: "sif/bwa_v0.7.17_biocontainers.sif" # bwa
   samtools: "sif/samtools_v1.9.4deb_biocontainers.sif" # samtools
   picard: "sif/picard_v2.27.5_broadinstitute.sif" # picard
@@ -80,7 +83,7 @@ SIF:
   facets: "sif/facets_v0.6.2_biocontainers.sif"
   snppile: "sif/snppile_v0.6.2_biocontainers.sif"
   vcf2maf: "sif/vep-ensembl_105.sif"
-  mosdepth: "sif/vep-ensembl_105.sif"
+  mosdepth: "sif/mosdepth_v0.3.3_quay.sif"
+  bcftools: "sif/bcftools_v1.16_quay.sif"
+  checkmate: "sif/ngscheckmate_v1.3_migbro.sif"
 # sif containers can be changed manually
-
-

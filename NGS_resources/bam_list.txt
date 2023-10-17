@@ -1,0 +1,2 @@
+/DATA/Datasets/PanCancer/Preprocessed/NICHE/DNAseq_output/NGScheckmate/6901_9_CF64788_TCTAGCTGCG-ATAGGTAAGG_S14_output_matched.vcf
+/DATA/Datasets/PanCancer/Preprocessed/NICHE/DNAseq_output/NGScheckmate/6901_24_CF65214_CCGTGAGTTC-CTTGGTATGA_S15_output_matched.vcf
