@@ -60,6 +60,8 @@ def output_rules_all():
     manta = expand(config["output_folder"]+"/Manta/{tumor}-vs-{normal}/results/variants/somaticSV.vcf.gz",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
     
     facets = expand(config["output_folder"] + "/FACETS/fitted/{tumor}-vs-{normal}.snppile.csv.gz_fitted.csv",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
+    
+    #test_output = expand(config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.text",sample=set(samples["sample_ID"]))
 
     modes = list()
     if config["run_modes"]["gatk"] == True:
@@ -68,18 +70,17 @@ def output_rules_all():
       modes.append(variant_strelka_output)
     if config["run_modes"]["QCs"] == True:
         if config["run_modes"]["QCs"] == True and config["run_modes"]["gatk"] == False:
-            modes.append(qc_output)
+            modes.append([qc_output,NGS_check_files])
         if config["run_modes"]["QCs"] == True and config["run_modes"]["gatk"] == True:
-            modes.append(qc_output_gatk)
+            modes.append([qc_output_gatk,NGS_check_files])
     if config["run_modes"]["CNV"] == True:
       modes.append([cnv_normal,cnv_output,facets])
+    # for debugging
+    #if config["run_modes"]["test"] == True:
+    #  modes.append([test_output])
 
     return modes
     
-# possible to add more rules to output
-# examples:
-#    return bam_output, qc_output, qc_output_b, variant_GATK_output, variant_strelka_output, variant_strelka_output_idx,cnv_normal, cnv_output, maf_files,maf_files_indels,NGS_check_files,facets,pyclone_input, variant_varscan_mpile,variant_varscan_output
-#    return bam_output, qc_output, variant_GATK_output, maf_files, variant_strelka_output, variant_strelka_output_idx, variant_GATK_output, qc_output,qc_output_b, variant_strelka_output, cnv_output,variant_varscan_mpile,variant_varscan_output, facets, pyclone_output
 
 
 ### common functions
@@ -102,11 +103,11 @@ def get_output_qc_fastq_R2(wildcards):
     return(fastq_2)
 
 def write_file(wildcards):
-    temp_file = open("/DATA/j.traets/Tools/NGSCheckMate/bam_list.txt","w")
-    temp_file.write(config["output_folder"]+"/mapped/"+wildcards[0]+"_sorted_hg38_ARRG_dedup_recal.bam"+"\n")
-    temp_file.write(config["output_folder"]+"/mapped/"+wildcards[1]+"_sorted_hg38_ARRG_dedup_recal.bam")
+    temp_file = open(config["params"]["ngscheck"]["bam_list"],"w")
+    temp_file.write(config["output_folder"]+"/NGScheckmate/"+wildcards[0]+"_output_matched.vcf"+"\n")
+    temp_file.write(config["output_folder"]+"/NGScheckmate/"+wildcards[1]+"_output_matched.vcf")
     temp_file.close()
-    return("/DATA/j.traets/Tools/NGSCheckMate/bam_list.txt")
+    return(config["params"]["ngscheck"]["bam_list"])
 
 def get_tumor_purity(wildcards):
     temp_file = pd.read_csv(config["output_folder"]+"/FACETS/fitted/"+wildcards[0]+"-vs-"+wildcards[1]+".snppile.csv.gz_fitted.csv",sep=',')

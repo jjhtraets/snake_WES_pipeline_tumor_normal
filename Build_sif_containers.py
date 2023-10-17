@@ -12,10 +12,10 @@ if __name__ == "__main__":
   else:
     print("fastqc_v0.11.9_cv8.sif already present")
 
-  if (os.path.isfile("sif/multiqc_v1.8_staphb.sif")) == (not True):
-    os.system("singularity build sif/multiqc_v1.8_staphb.sif docker://staphb/multiqc:1.8")
+  if (os.path.isfile("sif/multiqc_v1.13_quay.sif")) == (not True):
+    os.system("singularity build sif/multiqc_v1.13_quay.sif docker://quay.io/biocontainers/multiqc:1.13--pyhdfd78af_0 ")
   else:
-    print("multiqc_v1.8_staphb.sif already present")
+    print("multiqc_v1.13_quay.sif already present")
 
   if (os.path.isfile("sif/bwa_v0.7.17_biocontainers.sif")) == (not True):
     os.system("singularity build sif/bwa_v0.7.17_biocontainers.sif docker://biocontainers/bwa:v0.7.17_cv1")
@@ -66,4 +66,21 @@ if __name__ == "__main__":
     os.system("singularity build sif/mosdepth_v0.3.3_quay.sif docker://quay.io/biocontainers/mosdepth:0.3.3--h37c5b7d_2")
   else:
     print("mosdepth_v0.3.3_quay.sif already present")
+    
+  if (os.path.isfile("sif/bcftools_v1.16_quay.sif")) == (not True):
+    os.system("singularity build sif/bcftools_v1.16_quay.sif docker://quay.io/biocontainers/bcftools:1.16--haef29d1_2")
+  else:
+    print("bcftools_v1.16_quay.sif already present")
+    
+  if (os.path.isfile("sif/bcftools_v1.16_quay.sif")) == (not True):
+    os.system("singularity build sif/bcftools_v1.16_quay.sif docker://quay.io/biocontainers/bcftools:1.16--haef29d1_2")
+  else:
+    print("bcftools_v1.16_quay.sif already present")
+    
+  if (os.path.isfile("sif/ngscheckmate_v1.3_migbro.sif")) == (not True):
+    os.system("singularity build sif/ngscheckmate_v1.3_migbro.sif docker://migbro/ngscheckmate:1.3")
+  else:
+    print("ngscheckmate_v1.3_migbro.dif already present")
+    
+    
 
