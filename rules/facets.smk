@@ -24,6 +24,7 @@ rule run_facets_r:
                 build = "hg38"
         singularity:
                 config["SIF"]["facets"]
+        threads: 40
         log: 
                 config["output_folder"]+"/logs/FACETS/{tumor}-vs-{normal}_run.log"
         output:

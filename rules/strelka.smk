@@ -4,7 +4,7 @@ rule index_strelka:
     output:
         config["output_folder"]+ "/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.bam.bai",
     singularity:
-        "docker://biocontainers/samtools:v1.9-4-deb_cv1"
+        config["SIF"]["samtools"]
     threads:
         1
     shell:

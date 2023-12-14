@@ -41,9 +41,9 @@ rule samtools_stat:
         config["SIF"]["samtools"]
     shell:
         """
-        samtools stat {input.bam} --ref-seq {input.genome} > {output}
+        samtools stats {input.bam} --ref-seq {input.genome} > {output}
         """
-        
+
 rule bcftools_stat:
     input:
         vcf = config["output_folder"]+"/GATK_out/{tumor}-vs-{normal}-GATKFiltered-pass.vcf",
@@ -51,10 +51,10 @@ rule bcftools_stat:
     output:
         config["output_folder"]+"/GATK_out/{tumor}-vs-{normal}-GATKFiltered-pass.text"
     singularity:
-        config["SIF"]["samtools"]
+        config["SIF"]["bcftools"]
     shell:
         """
-        bcftools stat {input.vcf} > {output}
+        bcftools stats {input.vcf} > {output}
         """
         
 rule mosdepth:
@@ -64,14 +64,15 @@ rule mosdepth:
     output:
         config["output_folder"]+"/mapped/{sample}.mosdepth.global.dist.txt"
     params:
-        bed = config["params"]["CNVkit"]["bait_bed"]
+        bed = config["params"]["CNVkit"]["bait_bed"],
+        output = config["output_folder"]+"/mapped/{sample}"
     singularity:
         config["SIF"]["mosdepth"]
     threads:
         config["params"]["gatk"]["threads"]
     shell:
         """
-        mosdepth --threads {threads} --by {params.bed} {wildcards.sample} {input.bam}
+        mosdepth --threads {threads} --by {params.bed} {params.output} {input.bam}
         """
 
 rule multiqc_gatk:

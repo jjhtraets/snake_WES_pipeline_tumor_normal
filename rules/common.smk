@@ -74,7 +74,7 @@ def output_rules_all():
         if config["run_modes"]["QCs"] == True and config["run_modes"]["gatk"] == True:
             modes.append([qc_output_gatk,NGS_check_files])
     if config["run_modes"]["CNV"] == True:
-      modes.append([cnv_normal,cnv_output,facets])
+      modes.append([cnv_normal,cnv_output,facets,cnv_purity])
     # for debugging
     #if config["run_modes"]["test"] == True:
     #  modes.append([test_output])

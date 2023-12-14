@@ -2,13 +2,18 @@
 dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)  # create personal library in container
 .libPaths(Sys.getenv("R_LIBS_USER"))
 
+# option to add more arguments to snakemake rule!
+
 #install/load the libraries, TODO create docker file!
-library(facets)
+
 install.packages(c("data.table","optparse","BiocManager"),repos = "http://cran.us.r-project.org",quiet = TRUE,verbose=FALSE)
-library(data.table)
-library(optparse)
 BiocManager::install("GenomicRanges",quietly = TRUE)
+install.packages("data.table",repos = "http://cran.us.r-project.org",quiet = TRUE,verbose=FALSE)
+
 library(GenomicRanges)
+library(facets)
+library(optparse)
+library(data.table)
 
 set.seed(1234)
 
@@ -168,6 +173,8 @@ targets<- data.table(read.table(opt$targets, comment.char= '#', header= FALSE, s
 rcmat_flt<- filter_rcmat(rcmat= rcmat[['pileup']], min_ndepth= opt$min_reads, 
                          max_ndepth= 10000000, target_bed= targets)
 nbhd_snp <- 250 # default
+
+# most default parameters, change if needed
 # run facets
 facets<- run_facets(
   pre_rcmat=       rcmat_flt,
@@ -175,14 +182,13 @@ facets<- run_facets(
   pre_snp.nbhd=    nbhd_snp, 
   pre_het.thresh=  0.25, 
   pre_cval=        opt$cvalue_1, 
-  pre_ndepth=      25,
-  pre_ndepthmax=   1e8, # options
+  pre_ndepth=      35,
+  pre_ndepthmax=   1000, 
   proc_cval=       opt$cvalue_2, 
   proc_min.nhet=   15, 
   emcncf_unif=     FALSE, 
   emcncf_min.nhet= 15
 ) 
-
 
 
 write(sprintf('[%s] Writing output', Sys.time()), stderr())

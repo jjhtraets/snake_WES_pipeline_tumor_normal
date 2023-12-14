@@ -67,7 +67,7 @@ rule CNVkit_run:
         output_f = config["output_folder"]+"/CNVkit/results/{tumor}/"
     shell:
         """
-        cnvkit.py batch {input.bam_tumor} -r {input.ref} --output-dir {params.output_f} --diagram --scatter  2> {log}
+        cnvkit.py batch {input.bam_tumor} -r {input.ref} --output-dir {params.output_f} --diagram --scatter 2> {log}
         """
 
 rule CNVkit_purity:

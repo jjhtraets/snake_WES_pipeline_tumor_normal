@@ -7,7 +7,7 @@ rule gatk_mutect2:
     output:
         config["output_folder"]+"/GATK_out/{tumor}-vs-{normal}.vcf"
     singularity:
-        "docker://broadinstitute/gatk:4.4.0.0"
+        config["SIF"]["gatk"]
     threads:
         config["params"]["gatk"]["threads"]
     log:
@@ -24,7 +24,7 @@ rule gatk_filter:
     output:
         config["output_folder"]+"/GATK_out/{tumor}-vs-{normal}-GATKFiltered.vcf"
     singularity:
-        "docker://broadinstitute/gatk:4.4.0.0"
+        config["SIF"]["gatk"]
     threads:
         config["params"]["gatk"]["threads"]
     log:
@@ -41,7 +41,7 @@ rule keep_pass_SNPs:
     output:
         config["output_folder"]+"/GATK_out/{tumor}-vs-{normal}-GATKFiltered-pass.vcf"
     singularity:
-        "docker://broadinstitute/gatk:4.4.0.0"
+        config["SIF"]["gatk"]
     threads:
         config["params"]["gatk"]["threads"]
     log:
