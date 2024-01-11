@@ -29,3 +29,19 @@ rule test_mates:
     shell:
         "python ./NGS_resources/ncm.py -V -l {params.file_l} -bed {params.SNP_ngs} -O {params.output_d}"
 
+
+rule test_mates_all:
+    input:
+        bam_files = expand(config["output_folder"]+"/NGScheckmate/{sample}_output_matched.vcf",sample=samples["sample_ID"]),
+        ref = config["params"]["gatk"]["ref"]
+    output:
+        config["output_folder"]+"/NGScheckmate/output_matched.txt"
+    singularity:
+        config["SIF"]["checkmate"]
+    params:
+        file_l = write_file_all,
+        output_d = config["output_folder"]+"/NGScheckmate/",
+        SNP_ngs = config["params"]["ngscheck"]["SNP"],
+    shell:
+        "python ./NGS_resources/ncm.py -V -l {params.file_l} -bed {params.SNP_ngs} -O {params.output_d}"
+

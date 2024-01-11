@@ -47,6 +47,7 @@ def output_rules_all():
     maf_files_indels = expand(config["output_folder"]+"/maf_files/{tumor}-vs-{normal}-strelka_indels.vep.maf",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
 
     NGS_check_files = expand(config["output_folder"]+"/NGScheckmate/{tumor}-vs-{normal}/output_matched.txt",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
+    NGS_check_files_all = config["output_folder"]+"/NGScheckmate/output_matched.txt"
 
     facets = expand(config["output_folder"] + "/FACETS/fitted/{tumor}-vs-{normal}.snppile.csv.gz_fitted.csv",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
 
@@ -70,9 +71,9 @@ def output_rules_all():
       modes.append(variant_strelka_output)
     if config["run_modes"]["QCs"] == True:
         if config["run_modes"]["QCs"] == True and config["run_modes"]["gatk"] == False:
-            modes.append([qc_output,NGS_check_files])
+            modes.append([qc_output,NGS_check_files,NGS_check_files_all])
         if config["run_modes"]["QCs"] == True and config["run_modes"]["gatk"] == True:
-            modes.append([qc_output_gatk,NGS_check_files])
+            modes.append([qc_output_gatk,NGS_check_files,NGS_check_files_all])
     if config["run_modes"]["CNV"] == True:
       modes.append([cnv_normal,cnv_output,facets,cnv_purity])
     # for debugging
