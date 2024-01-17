@@ -78,8 +78,8 @@ def output_rules_all():
             modes.append([qc_output_gatk,NGS_check_files,NGS_check_files_all])
     if config["run_modes"]["CNV"] == True:
       modes.append([cnv_normal,cnv_output,facets,cnv_purity])
-    if config["run_modes"]["compress"] == True:
-      modes.append([cram_com])
+    #if config["run_modes"]["compress"] == True:
+    #  modes.append([cram_com])
     
     # for debugging
     #if config["run_modes"]["test"] == True:
