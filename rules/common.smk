@@ -61,6 +61,8 @@ def output_rules_all():
     manta = expand(config["output_folder"]+"/Manta/{tumor}-vs-{normal}/results/variants/somaticSV.vcf.gz",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
     
     facets = expand(config["output_folder"] + "/FACETS/fitted/{tumor}-vs-{normal}.snppile.csv.gz_fitted.csv",zip,tumor=samples_matched["Tumor"],normal=samples_matched["Normal"])
+
+    cram_com = expand(config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.cram",sample=set(samples["sample_ID"])),
     
     #test_output = expand(config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.text",sample=set(samples["sample_ID"]))
 
@@ -76,6 +78,9 @@ def output_rules_all():
             modes.append([qc_output_gatk,NGS_check_files,NGS_check_files_all])
     if config["run_modes"]["CNV"] == True:
       modes.append([cnv_normal,cnv_output,facets,cnv_purity])
+    if config["run_modes"]["compress"] == True:
+      modes.append([cram_com])
+    
     # for debugging
     #if config["run_modes"]["test"] == True:
     #  modes.append([test_output])
@@ -108,6 +113,12 @@ def write_file(wildcards):
     temp_file.write(config["output_folder"]+"/NGScheckmate/"+wildcards[0]+"_output_matched.vcf"+"\n")
     temp_file.write(config["output_folder"]+"/NGScheckmate/"+wildcards[1]+"_output_matched.vcf")
     temp_file.close()
+    return(config["params"]["ngscheck"]["bam_list"])
+
+def write_file_all(wildcards):
+    #temp_file = open(config["params"]["ngscheck"]["bam_list"],"w")
+    print(wildcards)
+    #temp_file.close()
     return(config["params"]["ngscheck"]["bam_list"])
 
 def get_tumor_purity(wildcards):

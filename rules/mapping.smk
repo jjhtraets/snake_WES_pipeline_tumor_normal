@@ -114,3 +114,33 @@ rule apply_bqscore:
         """
         gatk ApplyBQSR -R {input.genome} --bqsr-recal-file {input.table_recal} -I {input.bam} -O {output} && samtools index {output} 2> {log}
         """
+
+rule compress_bam:
+    input:
+        bam = config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.bam",
+        ref = config["params"]["strelka"]["ref"]
+    output:
+        config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.cram"
+    singularity:
+        config["SIF"]["samtools"]
+    threads:
+        1
+    shell:
+        """
+        samtools view -T {input.ref} -C -o {output} {input.bam}
+        """
+        
+#rule decompress_bam:
+#    input:
+#        cram = config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.cram",
+#        ref = config["params"]["strelka"]["ref"]
+#    output:
+#        config["output_folder"]+"/mapped/{sample}_sorted_hg38_ARRG_dedup_recal.bam"
+#    singularity:
+#        config["SIF"]["samtools"]
+#    threads:
+#        1
+#    shell:
+#        """
+#        samtools view -T {input.ref} -b -o {output} {input.cram}
+#        """
